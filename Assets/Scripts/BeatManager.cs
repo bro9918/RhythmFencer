@@ -19,6 +19,7 @@ public class BeatManager : MonoBehaviour {
 	public int bpm = 120;
 	public AudioSource beat;
 	private float elapsedSinceBeat;
+	public bool showBeatMovers = false;
 	public GameObject beatMoverPrefab;
 	public List<GameObject> leftBeatMovers;
 	public List<GameObject> rightBeatMovers;
@@ -26,6 +27,7 @@ public class BeatManager : MonoBehaviour {
 	public float beatMoverOffset;
 	public float maxBeatMovers = 1;
 	public GameObject centerBeatVisual;
+	public float beatVisualMove;
 
 	void Awake()
 	{
@@ -71,7 +73,7 @@ public class BeatManager : MonoBehaviour {
 				CreateBeatMovers();
 				if (centerBeatVisual != null)
 				{
-					centerBeatVisual.renderer.enabled = false;
+					centerBeatVisual.transform.position -= new Vector3(0, beatVisualMove * 2, 0);
 				}
 			}
 		}
@@ -98,9 +100,11 @@ public class BeatManager : MonoBehaviour {
 	{
 		GameObject leftMover = (GameObject)Instantiate(beatMoverPrefab, beatCenter + new Vector3(-beatMoverOffset * (leftBeatMovers.Count + 1), 0, 0), Quaternion.identity);
 		leftMover.renderer.material.color = Color.red;
+		leftMover.renderer.enabled = showBeatMovers;
 		leftBeatMovers.Add(leftMover);
 		GameObject rightMover = (GameObject)Instantiate(beatMoverPrefab, beatCenter + new Vector3(beatMoverOffset * (rightBeatMovers.Count + 1), 0, 0), Quaternion.identity);
 		rightMover.renderer.material.color = Color.blue;
+		rightMover.renderer.enabled = showBeatMovers;
 		rightBeatMovers.Add(rightMover);
 	}
 }

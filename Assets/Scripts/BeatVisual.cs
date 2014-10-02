@@ -9,7 +9,7 @@ public class BeatVisual : MonoBehaviour {
 	{
 		if (Mathf.Pow(2, other.gameObject.layer) == beatMoverLayer.value)
 		{
-			renderer.enabled = true;
+			transform.position += new Vector3(0, BeatManager.Instance.beatVisualMove, 0);
 		}
 	}
 
@@ -17,7 +17,7 @@ public class BeatVisual : MonoBehaviour {
 	{
 		if (Mathf.Pow(2, other.gameObject.layer) == beatMoverLayer.value)
 		{
-			renderer.enabled = false;
+			transform.position -= new Vector3(0, BeatManager.Instance.beatVisualMove, 0);
 		}
 	}
 }
