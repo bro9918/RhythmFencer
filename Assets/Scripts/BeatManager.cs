@@ -25,6 +25,7 @@ public class BeatManager : MonoBehaviour {
 	public Vector3 beatCenter;
 	public float beatMoverOffset;
 	public float maxBeatMovers = 1;
+	public GameObject centerBeatVisual;
 
 	void Awake()
 	{
@@ -68,6 +69,10 @@ public class BeatManager : MonoBehaviour {
 					Destroy(rightBeatMover);
 				}
 				CreateBeatMovers();
+				if (centerBeatVisual != null)
+				{
+					centerBeatVisual.renderer.enabled = false;
+				}
 			}
 		}
 		else
