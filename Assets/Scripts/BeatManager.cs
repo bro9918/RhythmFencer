@@ -28,11 +28,23 @@ public class BeatManager : MonoBehaviour {
 	public float maxBeatMovers = 1;
 	public GameObject centerBeatVisual;
 	public float beatVisualMove;
+	public PlayerOneMovement playerOne;
+	public PlayerTwoMovement playerTwo;
+	public float beatTolerance = 0.5f;
+	public string leftMoverLayer;
+	public string rightMoverLayer;
+	private GameObject leftMoverDestroy;
+	private GameObject rightMoverDestroy;
+	public GameObject invalidSign;
 
 	void Awake()
 	{
-		//CreateBeatMovers();
-		for (int i = 0; i < maxBeatMovers; i++)
+		if (invalidSign != null)
+		{
+			invalidSign.SetActive(false);
+		}
+
+		for (int i = 0; i < maxBeatMovers - 1; i++)
 		{
 			CreateBeatMovers();
 		}
@@ -40,71 +52,121 @@ public class BeatManager : MonoBehaviour {
 
 	void FixedUpdate()
 	{
+		beatTolerance = Mathf.Clamp(beatTolerance, 0, 0.5f);
 		float beatPeriod = 60.0f / bpm;
 
-
-		/*if (rhythmFader != null)
-		{
-			Color fadeColor = rhythmFader.renderer.material.color;
-			fadeColor.a = elapsedSinceBeat / beatPeriod;
-			Debug.Log(fadeColor);
-			rhythmFader.renderer.material.color = fadeColor;
-		}*/
-		
-
+		// Handle beat timing.
 		if (elapsedSinceBeat >= beatPeriod)
 		{
 			elapsedSinceBeat = 0;
 			if (beat != null)
 			{
 				beat.Play();
-				if (leftBeatMovers.Count > 0)
+
+				if (invalidSign != null)
 				{
-					GameObject leftBeatMover = leftBeatMovers[0];
-					leftBeatMovers.RemoveAt(0);
-					Destroy(leftBeatMover);
+					invalidSign.SetActive(false);
 				}
-				if (rightBeatMovers.Count > 0)
-				{
-					GameObject rightBeatMover = rightBeatMovers[0];
-					rightBeatMovers.RemoveAt(0);
-					Destroy(rightBeatMover);
-				}
-				CreateBeatMovers();
+
+				// Reset beat tracking geometry.
 				if (centerBeatVisual != null)
 				{
 					centerBeatVisual.transform.position -= new Vector3(0, beatVisualMove * 2, 0);
+				}
+				if (leftBeatMovers.Count > 0)
+				{
+					leftMoverDestroy = leftBeatMovers[0];
+					rightMoverDestroy = rightBeatMovers[0];
 				}
 			}
 		}
 		else
 		{
 			elapsedSinceBeat += Time.fixedDeltaTime;
-			//Debug.Log((beatMoverOffset / maxBeatMovers) * (maxBeatMovers - 1));
-			if (leftBeatMovers.Count < 1)// || (leftBeatMovers[leftBeatMovers.Count - 1].transform.position - beatCenter).magnitude <= (beatMoverOffset / maxBeatMovers) * (maxBeatMovers - 1))
+
+			// Spawn new beat movers to keep the gap between at beatMoverOffset.
+			if (leftBeatMovers.Count < 1 || (leftBeatMovers[leftBeatMovers.Count - 1].transform.position - beatCenter).magnitude <= beatMoverOffset * (maxBeatMovers - 1))
 			{
-				//if (leftBeatMovers.Count > 0)
-				//	Debug.Log(leftBeatMovers.Count + " " + (leftBeatMovers[leftBeatMovers.Count - 1].transform.position - beatCenter).magnitude);
 				CreateBeatMovers();
 			}
+		}
 
-			for (int i = 0; i < leftBeatMovers.Count; i++)
+		// Move all beat movers towards the center.
+		for (int i = 0; i < leftBeatMovers.Count; i++)
+		{
+			leftBeatMovers[i].transform.position += new Vector3((beatMoverOffset / beatPeriod) * Time.fixedDeltaTime, 0, 0);
+			rightBeatMovers[i].transform.position -= new Vector3((beatMoverOffset / beatPeriod) * Time.fixedDeltaTime, 0, 0);
+		}
+
+		// Track when the oldest beat movers have given enough time after beat.
+		if (leftMoverDestroy != null && (leftMoverDestroy.transform.position - beatCenter).magnitude >= beatMoverOffset * beatTolerance)
+		{
+			// Destroy the oldest beat movers.
+			DestroyBeatMovers();
+
+			// Notify players that beat happened.
+			bool playersUpdate= true;
+			bool oneSpaceBetween = (playerTwo.transform.position - playerOne.transform.position).magnitude < 3;
+			if (oneSpaceBetween && playerOne.moveRight && playerTwo.moveLeft)
 			{
-				leftBeatMovers[i].transform.position += new Vector3((beatMoverOffset / beatPeriod) * Time.fixedDeltaTime, 0, 0);
-				rightBeatMovers[i].transform.position -= new Vector3((beatMoverOffset / beatPeriod) * Time.fixedDeltaTime, 0, 0);
+				playersUpdate = false;
+				// TODO show that players attempted to move into the same space.
+				if (invalidSign != null)
+				{
+					invalidSign.SetActive(true);
+					invalidSign.transform.position = (playerOne.transform.position + playerTwo.transform.position) / 2;
+				}
 			}
+			else
+			{
+				if (invalidSign != null)
+				{
+					invalidSign.SetActive(false);
+				}
+			}
+			playerOne.OnBeat(playersUpdate);
+			playerTwo.OnBeat(playersUpdate);
 		}
 	}
 
 	private void CreateBeatMovers()
 	{
-		GameObject leftMover = (GameObject)Instantiate(beatMoverPrefab, beatCenter + new Vector3(-beatMoverOffset * (leftBeatMovers.Count + 1), 0, 0), Quaternion.identity);
+		int moverCount = (int)Mathf.Min(leftBeatMovers.Count + 1, maxBeatMovers);
+
+		GameObject leftMover = (GameObject)Instantiate(beatMoverPrefab, beatCenter + new Vector3(-beatMoverOffset * moverCount, 0, 0), Quaternion.identity);
 		leftMover.renderer.material.color = Color.red;
 		leftMover.renderer.enabled = showBeatMovers;
+		leftMover.gameObject.layer = LayerMask.NameToLayer(leftMoverLayer);
 		leftBeatMovers.Add(leftMover);
-		GameObject rightMover = (GameObject)Instantiate(beatMoverPrefab, beatCenter + new Vector3(beatMoverOffset * (rightBeatMovers.Count + 1), 0, 0), Quaternion.identity);
+		GameObject rightMover = (GameObject)Instantiate(beatMoverPrefab, beatCenter + new Vector3(beatMoverOffset * moverCount, 0, 0), Quaternion.identity);
 		rightMover.renderer.material.color = Color.blue;
 		rightMover.renderer.enabled = showBeatMovers;
+		rightMover.gameObject.layer = LayerMask.NameToLayer(rightMoverLayer);
 		rightBeatMovers.Add(rightMover);
+	}
+
+	private void DestroyBeatMovers()
+	{
+		if (leftMoverDestroy != null)
+		{
+			leftBeatMovers.Remove(leftMoverDestroy);
+			Destroy(leftMoverDestroy);
+		}
+		if (rightMoverDestroy != null)
+		{
+			rightBeatMovers.Remove(rightMoverDestroy);
+			Destroy(rightMoverDestroy);
+		}
+	}
+
+	public bool IsBeatReady()
+	{
+		// Return whether or not the oldest beat movers are within range of the beatCenter (beatOffset * beatTolerance).
+		if (leftBeatMovers.Count > 0)
+		{
+			bool ready = (leftBeatMovers[0].transform.position - beatCenter).sqrMagnitude <= Mathf.Pow(beatMoverOffset * beatTolerance, 2);
+			return ready;
+		}
+		return false;
 	}
 }

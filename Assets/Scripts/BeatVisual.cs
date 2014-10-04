@@ -4,10 +4,12 @@ using System.Collections;
 public class BeatVisual : MonoBehaviour {
 
 	public LayerMask beatMoverLayer = 0;
+	public bool isCenter = false;
 
 	void OnTriggerEnter(Collider other)
 	{
-		if (Mathf.Pow(2, other.gameObject.layer) == beatMoverLayer.value)
+		int layer = (int)Mathf.Pow(2, other.gameObject.layer);
+		if ((beatMoverLayer.value & layer) == layer)
 		{
 			transform.position += new Vector3(0, BeatManager.Instance.beatVisualMove, 0);
 		}
@@ -15,9 +17,13 @@ public class BeatVisual : MonoBehaviour {
 
 	void OnTriggerExit(Collider other)
 	{
-		if (Mathf.Pow(2, other.gameObject.layer) == beatMoverLayer.value)
+		int layer = (int)Mathf.Pow(2, other.gameObject.layer);
+		if ((beatMoverLayer.value & layer) == layer)
 		{
-			transform.position -= new Vector3(0, BeatManager.Instance.beatVisualMove, 0);
+			if (!isCenter)
+			{
+				transform.position -= new Vector3(0, BeatManager.Instance.beatVisualMove, 0);
+			}
 		}
 	}
 }

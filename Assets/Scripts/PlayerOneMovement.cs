@@ -6,6 +6,11 @@ public class PlayerOneMovement : MonoBehaviour {
 	public float xPosition = -3.0f;
 	private PlayerTwoMovement pTwoMove;
 	private GameObject pTwo;
+	private bool moveLeft;
+	public bool moveRight;
+	public bool attackHigh;
+	public bool attackLow;
+	public bool actedEarly = false;
 
 	// Use this for initialization
 	void Start () {
@@ -15,22 +20,62 @@ public class PlayerOneMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(xPosition >-5.0f)
+		if (!moveLeft &&! moveRight && !attackHigh && !attackLow && !actedEarly)
 		{
-			if(Input.GetKeyDown(KeyCode.A))
+			if (xPosition > -4.5f)
+			{
+				if (Input.GetKeyDown(KeyCode.A) && !Input.GetKeyDown(KeyCode.D))
+				{
+					if (BeatManager.Instance.IsBeatReady())
+					{
+						moveLeft = true;
+					}
+					else
+					{
+						actedEarly = true;
+					}
+				}
+			}
+
+			if (xPosition < 1.5f && (pTwoMove.xPosition - xPosition) >= 2.0f)
+			{
+				if (Input.GetKeyDown(KeyCode.D) && !Input.GetKeyDown(KeyCode.A))
+				{
+					if (BeatManager.Instance.IsBeatReady())
+					{
+						moveRight = true;
+					}
+					else
+					{
+						actedEarly = true;
+					}
+				}
+			}
+		}
+	}
+
+	public bool OnBeat(bool ableToUpdate)
+	{
+		bool acted = false;
+		if (ableToUpdate)
+		{
+			
+			if (moveLeft)
 			{
 				transform.Translate(new Vector3(-1.0f, 0.0f, 0.0f));
 				xPosition -= 1.0f;
+				acted = true;
 			}
-		}
-
-		if(xPosition < 1.0f && (pTwoMove.xPosition - xPosition) >= 2.0f)
-		{
-			if(Input.GetKeyDown(KeyCode.D))
+			else if (moveRight)
 			{
 				transform.Translate(new Vector3(1.0f, 0.0f, 0.0f));
 				xPosition += 1.0f;
+				acted = true;
 			}
 		}
+
+		moveLeft = moveRight = attackHigh = attackLow = false;
+		actedEarly = false;
+		return acted;
 	}
 }
