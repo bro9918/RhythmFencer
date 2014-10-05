@@ -3,6 +3,18 @@ using System.Collections;
 
 public class AttackManager : MonoBehaviour {
 
+	private static AttackManager instance;
+	public static AttackManager Instance
+	{
+		get
+		{
+			if (instance == null)
+			{
+				instance = GameObject.FindGameObjectWithTag("Globals").GetComponent<AttackManager>();
+			}
+			return instance;
+		}
+	}
 	private GameObject pOne;
 	private GameObject pTwo;
 	private PlayerOneAttack pOneAttack;
@@ -13,8 +25,9 @@ public class AttackManager : MonoBehaviour {
 	public GUIText pTwoScoreText;
 	private PlayerOneMovement pOneMove;
 	private PlayerTwoMovement pTwoMove;
-	private Vector3 pOneStartSpace;
-	private Vector3 pTwoStartSpace;
+	public Vector3 pOneStartSpace;
+	public Vector3 pTwoStartSpace;
+	public bool resetingPositions = false;
 
 
 	// Use this for initialization
@@ -80,39 +93,51 @@ public class AttackManager : MonoBehaviour {
 			pTwoAttack.attackState = 0;
 			pTwoAttack.spriteRend.sprite = pTwoAttack.nullAttack;
 		}
+
 		if(Mathf.Abs(pOne.transform.position.x - pTwo.transform.position.x) < .7f)
 		{
 			if(pOneAttack.attackState > pTwoAttack.attackState && (pOneAttack.attackState != 3 || pTwoAttack.attackState != 1))
 			{
 				pOneScore ++;
-				pOne.transform.position = pOneStartSpace;
+				resetingPositions = true;
+				/*pOne.transform.position = pOneStartSpace;
 				pTwo.transform.position = pTwoStartSpace;
 				pOneMove.xPosition = pOne.transform.position.x;
-				pTwoMove.xPosition = pTwo.transform.position.x;
+				pTwoMove.xPosition = pTwo.transform.position.x;*/
 			}
 			if(pOneAttack.attackState == 3 && pTwoAttack.attackState == 1)
 			{
 				pTwoScore ++;
-				pOne.transform.position = pOneStartSpace;
+				resetingPositions = true;
+				/*pOne.transform.position = pOneStartSpace;
 				pTwo.transform.position = pTwoStartSpace;
 				pOneMove.xPosition = pOne.transform.position.x;
-				pTwoMove.xPosition = pTwo.transform.position.x;
+				pTwoMove.xPosition = pTwo.transform.position.x;*/
 			}
 			if(pTwoAttack.attackState > pOneAttack.attackState && (pTwoAttack.attackState != 3 || pOneAttack.attackState != 1))
 			{
 				pTwoScore ++;
-				pOne.transform.position = pOneStartSpace;
+				resetingPositions = true;
+				/*pOne.transform.position = pOneStartSpace;
 				pTwo.transform.position = pTwoStartSpace;
 				pOneMove.xPosition = pOne.transform.position.x;
-				pTwoMove.xPosition = pTwo.transform.position.x;
+				pTwoMove.xPosition = pTwo.transform.position.x;*/
 			}
 			if(pTwoAttack.attackState == 3 && pOneAttack.attackState == 1)
 			{
 				pOneScore ++;
-				pOne.transform.position = pOneStartSpace;
+				resetingPositions = true;
+				/*pOne.transform.position = pOneStartSpace;
 				pTwo.transform.position = pTwoStartSpace;
 				pOneMove.xPosition = pOne.transform.position.x;
-				pTwoMove.xPosition = pTwo.transform.position.x;
+				pTwoMove.xPosition = pTwo.transform.position.x;*/
+			}
+
+			if (resetingPositions)
+			{
+				pOneMove.maxX = -3;
+				pTwoMove.minX = 3;
+				BeatManager.Instance.pOneBackedUp = BeatManager.Instance.pTwoBackedUp = false;
 			}
 		}
 		pOneScoreText.text = "" + pOneScore;

@@ -37,6 +37,12 @@ public class BeatManager : MonoBehaviour {
 	private GameObject rightMoverDestroy;
 	public GameObject invalidSign;
 	private AttackManager attackManager;
+	//public bool autoBackup = true;
+	[HideInInspector]
+	public bool pOneBackedUp = false;
+	[HideInInspector]
+	public bool pTwoBackedUp = false;
+	public GameObject beatMoverContatiner;
 
 	void Awake()
 	{
@@ -126,9 +132,49 @@ public class BeatManager : MonoBehaviour {
 					invalidSign.SetActive(false);
 				}
 			}
-			bool pOneAct = playerOne.OnBeat(playersUpdate);
-			bool pTwoAct = playerTwo.OnBeat(playersUpdate);
-			attackManager.ResolveAttack(pOneAct, pTwoAct);
+
+			if (!attackManager.resetingPositions)
+			{
+				bool pOneAct = playerOne.OnBeat(playersUpdate);
+				bool pTwoAct = playerTwo.OnBeat(playersUpdate);
+				attackManager.ResolveAttack(pOneAct, pTwoAct);
+			}
+			else
+			{
+				bool pOneAct = false, pTwoAct = false;
+				if (true)//autoBackup)
+				{
+					if (!pOneBackedUp && playerOne.transform.position.x > attackManager.pOneStartSpace.x)
+					{
+						playerOne.transform.position += new Vector3(-1, 0, 0);
+						playerOne.xPosition = playerOne.transform.position.x;
+					}
+					else
+					{
+						pOneBackedUp = true;
+						pOneAct = playerOne.OnBeat(true);
+						Debug.Log(pOneAct);
+					}
+					if (!pTwoBackedUp && playerTwo.transform.position.x < attackManager.pTwoStartSpace.x)
+					{
+						playerTwo.transform.position += new Vector3(1, 0, 0);
+						playerTwo.xPosition = playerTwo.transform.position.x;
+					}
+					else
+					{
+						pTwoBackedUp = true;
+						pTwoAct = playerTwo.OnBeat(true);
+						Debug.Log(pTwoAct);
+					}
+				}
+
+				if ((pOneBackedUp && pTwoBackedUp) && (pOneAct && pTwoAct))
+				{
+					attackManager.resetingPositions = false;
+					playerOne.maxX = 1;
+					playerTwo.minX = -1;
+				}
+			}
 		}
 	}
 
@@ -146,6 +192,12 @@ public class BeatManager : MonoBehaviour {
 		rightMover.renderer.enabled = showBeatMovers;
 		rightMover.gameObject.layer = LayerMask.NameToLayer(rightMoverLayer);
 		rightBeatMovers.Add(rightMover);
+
+		if (beatMoverContatiner != null)
+		{
+			leftMover.transform.parent = beatMoverContatiner.transform;
+			rightMover.transform.parent = beatMoverContatiner.transform;
+		}
 	}
 
 	private void DestroyBeatMovers()

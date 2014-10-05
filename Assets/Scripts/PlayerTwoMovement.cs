@@ -11,45 +11,42 @@ public class PlayerTwoMovement : MonoBehaviour {
 	public bool attackHigh;
 	public bool attackLow;
 	public bool actedEarly = false;
+	[HideInInspector]
+	public float minX;
 
 	// Use this for initialization
 	void Start () {
 		xPosition = transform.position.x;
 		pOne = GameObject.FindGameObjectWithTag("Player1");
 		pOneMove = pOne.GetComponent<PlayerOneMovement>();
+		minX = -1;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (!moveLeft && !moveRight && !attackHigh && !attackLow && !actedEarly)
 		{
-			if (xPosition > -1.7f && (xPosition - pOneMove.xPosition) >= 1.5f)
+			if (Input.GetKeyDown(KeyCode.LeftArrow) && !Input.GetKeyDown(KeyCode.RightArrow))
 			{
-				if (Input.GetKeyDown(KeyCode.LeftArrow) && !Input.GetKeyDown(KeyCode.RightArrow))
+				if (BeatManager.Instance.IsBeatReady())
 				{
-					if (BeatManager.Instance.IsBeatReady())
-					{
-						moveLeft = true;
-					}
-					else
-					{
-						actedEarly = true;
-					}
+					moveLeft = true;
+				}
+				else
+				{
+					actedEarly = true;
 				}
 			}
 
-			if (xPosition < 4.3f)
+			if (Input.GetKeyDown(KeyCode.RightArrow) && !Input.GetKeyDown(KeyCode.LeftArrow))
 			{
-				if (Input.GetKeyDown(KeyCode.RightArrow) && !Input.GetKeyDown(KeyCode.LeftArrow))
+				if (BeatManager.Instance.IsBeatReady())
 				{
-					if (BeatManager.Instance.IsBeatReady())
-					{
-						moveRight = true;
-					}
-					else
-					{
-						actedEarly = true;
-					}
+					moveRight = true;
+				}
+				else
+				{
+					actedEarly = true;
 				}
 			}
 		}
@@ -62,14 +59,21 @@ public class PlayerTwoMovement : MonoBehaviour {
 		{
 			if (moveLeft)
 			{
-				transform.Translate(new Vector3(-1.0f, 0.0f, 0.0f));
-				xPosition -= 1.0f;
+				if (xPosition > minX && (xPosition - pOneMove.xPosition) >= 1.5f)
+				{
+					transform.Translate(new Vector3(-1.0f, 0.0f, 0.0f));
+					xPosition -= 1.0f;
+				}
+				
 				acted = true;
 			}
 			else if (moveRight)
 			{
-				transform.Translate(new Vector3(1.0f, 0.0f, 0.0f));
-				xPosition += 1.0f;
+				if (xPosition < 4.3f)
+				{
+					transform.Translate(new Vector3(1.0f, 0.0f, 0.0f));
+					xPosition += 1.0f;
+				}
 				acted = true;
 			}
 		}
