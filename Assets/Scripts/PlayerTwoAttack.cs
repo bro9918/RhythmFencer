@@ -9,6 +9,7 @@ public class PlayerTwoAttack : MonoBehaviour {
 	public Sprite lowAttack;
 	public Sprite midAttack;
 	public Sprite highAttack;
+	public Sprite nullAttack;
 	
 	// Use this for initialization
 	void Start () {

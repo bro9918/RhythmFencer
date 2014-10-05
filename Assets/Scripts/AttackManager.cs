@@ -49,6 +49,7 @@ public class AttackManager : MonoBehaviour {
 		else if(!pOneAct && !pOneAttack.attackCommitted)
 		{
 			pOneAttack.attackState = 0;
+			pOneAttack.spriteRend.sprite = pOneAttack.nullAttack;
 		}
 
 		// Player Two.
@@ -68,6 +69,7 @@ public class AttackManager : MonoBehaviour {
 		else if(!pTwoAct && !pTwoAttack.attackCommitted)
 		{
 			pTwoAttack.attackState = 0;
+			pTwoAttack.spriteRend.sprite = pTwoAttack.nullAttack;
 		}
 		if(Mathf.Abs(pOne.transform.position.x - pTwo.transform.position.x) < .7f)
 		{
