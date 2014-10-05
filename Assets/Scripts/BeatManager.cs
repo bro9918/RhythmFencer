@@ -36,6 +36,7 @@ public class BeatManager : MonoBehaviour {
 	private GameObject leftMoverDestroy;
 	private GameObject rightMoverDestroy;
 	public GameObject invalidSign;
+	private AttackManager attackManager;
 
 	void Awake()
 	{
@@ -48,6 +49,7 @@ public class BeatManager : MonoBehaviour {
 		{
 			CreateBeatMovers();
 		}
+		attackManager = GetComponent<AttackManager>();
 	}
 
 	void FixedUpdate()
@@ -124,8 +126,9 @@ public class BeatManager : MonoBehaviour {
 					invalidSign.SetActive(false);
 				}
 			}
-			playerOne.OnBeat(playersUpdate);
-			playerTwo.OnBeat(playersUpdate);
+			bool pOneAct = playerOne.OnBeat(playersUpdate);
+			bool pTwoAct = playerTwo.OnBeat(playersUpdate);
+			attackManager.ResolveAttack(pOneAct, pTwoAct);
 		}
 	}
 

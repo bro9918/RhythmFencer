@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerOneMovement : MonoBehaviour {
 
-	public float xPosition = -3.0f;
+	public float xPosition;
 	private PlayerTwoMovement pTwoMove;
 	private GameObject pTwo;
 	private bool moveLeft;
@@ -14,6 +14,7 @@ public class PlayerOneMovement : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		xPosition = transform.position.x;
 		pTwo = GameObject.FindGameObjectWithTag("Player2");
 		pTwoMove = pTwo.GetComponent<PlayerTwoMovement>();
 	}
@@ -22,7 +23,7 @@ public class PlayerOneMovement : MonoBehaviour {
 	void Update () {
 		if (!moveLeft &&! moveRight && !attackHigh && !attackLow && !actedEarly)
 		{
-			if (xPosition > -4.5f)
+			if (xPosition > -4.3f)
 			{
 				if (Input.GetKeyDown(KeyCode.A) && !Input.GetKeyDown(KeyCode.D))
 				{
@@ -37,7 +38,7 @@ public class PlayerOneMovement : MonoBehaviour {
 				}
 			}
 
-			if (xPosition < 1.5f && (pTwoMove.xPosition - xPosition) >= 2.0f)
+			if (xPosition < 1.7f && (pTwoMove.xPosition - xPosition) >= 2.0f)
 			{
 				if (Input.GetKeyDown(KeyCode.D) && !Input.GetKeyDown(KeyCode.A))
 				{
