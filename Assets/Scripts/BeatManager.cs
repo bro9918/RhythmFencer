@@ -108,7 +108,7 @@ public class BeatManager : MonoBehaviour {
 
 			// Notify players that beat happened.
 			bool playersUpdate= true;
-			bool oneSpaceBetween = (playerTwo.transform.position - playerOne.transform.position).magnitude < 3;
+			bool oneSpaceBetween = (playerTwo.transform.position - playerOne.transform.position).magnitude < 2;
 			if (oneSpaceBetween && playerOne.moveRight && playerTwo.moveLeft)
 			{
 				playersUpdate = false;

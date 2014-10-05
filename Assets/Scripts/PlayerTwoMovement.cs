@@ -23,7 +23,7 @@ public class PlayerTwoMovement : MonoBehaviour {
 	void Update () {
 		if (!moveLeft && !moveRight && !attackHigh && !attackLow && !actedEarly)
 		{
-			if (xPosition > -1.7f && (xPosition - pOneMove.xPosition) >= 2.0f)
+			if (xPosition > -1.7f && (xPosition - pOneMove.xPosition) >= 1.5f)
 			{
 				if (Input.GetKeyDown(KeyCode.LeftArrow) && !Input.GetKeyDown(KeyCode.RightArrow))
 				{

@@ -38,7 +38,7 @@ public class PlayerOneMovement : MonoBehaviour {
 				}
 			}
 
-			if (xPosition < 1.7f && (pTwoMove.xPosition - xPosition) >= 2.0f)
+			if (xPosition < 1.7f && (pTwoMove.xPosition - xPosition) >= 1.5f)
 			{
 				if (Input.GetKeyDown(KeyCode.D) && !Input.GetKeyDown(KeyCode.A))
 				{

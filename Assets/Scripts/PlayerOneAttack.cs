@@ -23,7 +23,6 @@ public class PlayerOneAttack : MonoBehaviour {
 			{
 				attackState = 3;
 				attackCommitted = true;
-				spriteRend.sprite = highAttack;
 			}
 		}
 		if(!attackCommitted && Input.GetKeyDown(KeyCode.S))
@@ -32,7 +31,6 @@ public class PlayerOneAttack : MonoBehaviour {
 			{
 				attackState = 1;
 				attackCommitted = true;
-				spriteRend.sprite = lowAttack;
 			}
 		}
 

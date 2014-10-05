@@ -23,7 +23,6 @@ public class PlayerTwoAttack : MonoBehaviour {
 			{
 				attackState = 3;
 				attackCommitted = true;
-				spriteRend.sprite = highAttack;
 			}
 		}
 		if(!attackCommitted && Input.GetKeyDown(KeyCode.DownArrow))
@@ -32,7 +31,6 @@ public class PlayerTwoAttack : MonoBehaviour {
 			{
 				attackState = 1;
 				attackCommitted = true;
-				spriteRend.sprite = lowAttack;
 			}
 		}
 

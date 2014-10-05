@@ -30,10 +30,18 @@ public class AttackManager : MonoBehaviour {
 	}
 
 	public void ResolveAttack(bool pOneAct, bool pTwoAct){
-		Debug.Log(pTwoAttack.attackCommitted);
+		//Debug.Log(pTwoAttack.attackCommitted);
 
-
-		if(pOneAct && !pOneAttack.attackCommitted)
+		// Player One.
+		if (pOneAttack.attackCommitted && pOneAttack.attackState == 3)
+		{
+			pOneAttack.spriteRend.sprite = pOneAttack.highAttack;
+		}
+		else if (pOneAttack.attackCommitted && pOneAttack.attackState == 1)
+		{
+			pOneAttack.spriteRend.sprite = pOneAttack.lowAttack;
+		}
+		else if(pOneAct && !pOneAttack.attackCommitted)
 		{
 			pOneAttack.attackState = 2;
 			pOneAttack.spriteRend.sprite = pOneAttack.midAttack;
@@ -42,7 +50,17 @@ public class AttackManager : MonoBehaviour {
 		{
 			pOneAttack.attackState = 0;
 		}
-		if(pTwoAct && !pTwoAttack.attackCommitted)
+
+		// Player Two.
+		if (pTwoAttack.attackCommitted && pTwoAttack.attackState == 3)
+		{
+			pTwoAttack.spriteRend.sprite = pTwoAttack.highAttack;
+		}
+		else if (pTwoAttack.attackCommitted && pTwoAttack.attackState == 1)
+		{
+			pTwoAttack.spriteRend.sprite = pTwoAttack.lowAttack;
+		}
+		else if (pTwoAct && !pTwoAttack.attackCommitted)
 		{
 			pTwoAttack.attackState = 2;
 			pTwoAttack.spriteRend.sprite = pTwoAttack.midAttack;
