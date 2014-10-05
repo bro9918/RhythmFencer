@@ -11,17 +11,26 @@ public class AttackManager : MonoBehaviour {
 	public int pTwoScore = 0;
 	public GUIText pOneScoreText;
 	public GUIText pTwoScoreText;
+	private PlayerOneMovement pOneMove;
+	private PlayerTwoMovement pTwoMove;
+	private Vector3 pOneStartSpace;
+	private Vector3 pTwoStartSpace;
 
 
 	// Use this for initialization
 	void Start () {
 		pOne = GameObject.FindGameObjectWithTag("Player1");
 		pOneAttack = pOne.GetComponent<PlayerOneAttack>();
+		pOneMove = pOne.GetComponent<PlayerOneMovement>();
 		pTwo = GameObject.FindGameObjectWithTag("Player2");
 		pTwoAttack = pTwo.GetComponent<PlayerTwoAttack>();
+		pTwoMove = pTwo.GetComponent<PlayerTwoMovement>();
 
 		pOneScoreText.text = "" + pOneScore;
 		pTwoScoreText.text = "" + pTwoScore;
+
+		pOneStartSpace = new Vector3(-3.3f, -0.33f, 0);
+		pTwoStartSpace = new Vector3(3.3f, -0.33f, 0);
 	}
 	
 	// Update is called once per frame
@@ -73,14 +82,38 @@ public class AttackManager : MonoBehaviour {
 		}
 		if(Mathf.Abs(pOne.transform.position.x - pTwo.transform.position.x) < .7f)
 		{
-			if(pOneAttack.attackState > pTwoAttack.attackState && pTwoAttack.attackState != 1)
+			if(pOneAttack.attackState > pTwoAttack.attackState && (pOneAttack.attackState != 3 || pTwoAttack.attackState != 1))
+			{
 				pOneScore ++;
+				pOne.transform.position = pOneStartSpace;
+				pTwo.transform.position = pTwoStartSpace;
+				pOneMove.xPosition = pOne.transform.position.x;
+				pTwoMove.xPosition = pTwo.transform.position.x;
+			}
 			if(pOneAttack.attackState == 3 && pTwoAttack.attackState == 1)
+			{
 				pTwoScore ++;
-			if(pTwoAttack.attackState > pOneAttack.attackState && pOneAttack.attackState != 1)
+				pOne.transform.position = pOneStartSpace;
+				pTwo.transform.position = pTwoStartSpace;
+				pOneMove.xPosition = pOne.transform.position.x;
+				pTwoMove.xPosition = pTwo.transform.position.x;
+			}
+			if(pTwoAttack.attackState > pOneAttack.attackState && (pTwoAttack.attackState != 3 || pOneAttack.attackState != 1))
+			{
 				pTwoScore ++;
+				pOne.transform.position = pOneStartSpace;
+				pTwo.transform.position = pTwoStartSpace;
+				pOneMove.xPosition = pOne.transform.position.x;
+				pTwoMove.xPosition = pTwo.transform.position.x;
+			}
 			if(pTwoAttack.attackState == 3 && pOneAttack.attackState == 1)
+			{
 				pOneScore ++;
+				pOne.transform.position = pOneStartSpace;
+				pTwo.transform.position = pTwoStartSpace;
+				pOneMove.xPosition = pOne.transform.position.x;
+				pTwoMove.xPosition = pTwo.transform.position.x;
+			}
 		}
 		pOneScoreText.text = "" + pOneScore;
 		pTwoScoreText.text = "" + pTwoScore;
