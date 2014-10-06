@@ -142,9 +142,14 @@ public class BeatManager : MonoBehaviour {
 			else
 			{
 				bool pOneAct = false, pTwoAct = false;
-				if (true)//autoBackup)
+				if (true)//autoBackup
 				{
-					if (!pOneBackedUp && playerOne.transform.position.x > attackManager.pOneStartSpace.x)
+					if (!pOneBackedUp && !attackManager.stepBack && playerOne.transform.position.x > attackManager.pOneStartSpace.x)
+					{
+						playerOne.transform.position += new Vector3(-1, 0, 0);
+						playerOne.xPosition = playerOne.transform.position.x;
+					}
+					else if(!pOneBackedUp && attackManager.stepBack && !pOneBackedUp && playerOne.transform.position.x > attackManager.pOneStepSpace.x)
 					{
 						playerOne.transform.position += new Vector3(-1, 0, 0);
 						playerOne.xPosition = playerOne.transform.position.x;
@@ -155,9 +160,14 @@ public class BeatManager : MonoBehaviour {
 						pOneAct = playerOne.OnBeat(true);
 						Debug.Log(pOneAct);
 					}
-					if (!pTwoBackedUp && playerTwo.transform.position.x < attackManager.pTwoStartSpace.x)
+					if (!pTwoBackedUp && !attackManager.stepBack && playerTwo.transform.position.x < attackManager.pTwoStartSpace.x)
 					{
 						playerTwo.transform.position += new Vector3(1, 0, 0);
+						playerTwo.xPosition = playerTwo.transform.position.x;
+					}
+					else if (!pTwoBackedUp && attackManager.stepBack && playerTwo.transform.position.x < attackManager.pTwoStepSpace.x)
+					{
+						playerTwo.transform.position += new Vector3(1,0,0);
 						playerTwo.xPosition = playerTwo.transform.position.x;
 					}
 					else
@@ -167,6 +177,8 @@ public class BeatManager : MonoBehaviour {
 						Debug.Log(pTwoAct);
 					}
 				}
+
+	
 
 				if ((pOneBackedUp && pTwoBackedUp) && (pOneAct && pTwoAct))
 				{

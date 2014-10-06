@@ -27,8 +27,11 @@ public class AttackManager : MonoBehaviour {
 	private PlayerTwoMovement pTwoMove;
 	public Vector3 pOneStartSpace;
 	public Vector3 pTwoStartSpace;
+	public Vector3 pOneStepSpace;
+	public Vector3 pTwoStepSpace;
 	public bool resetingPositions = false;
-	public bool swordStrike = false;
+	public bool stepBack = false;
+
 
 	public AudioClip hit;
 	public AudioClip block;
@@ -51,12 +54,12 @@ public class AttackManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(resetingPositions == false)
+		if(!resetingPositions)
 		{
-			swordStrike = false;
+			stepBack = false;
 		}
 	}
-
+	
 	public void ResolveAttack(bool pOneAct, bool pTwoAct){
 		//Debug.Log(pTwoAttack.attackCommitted);
 
@@ -150,9 +153,8 @@ public class AttackManager : MonoBehaviour {
 			{
 				audio.clip = block;
 				audio.Play();
-				swordStrike = true;
-				//pTwoMove.transform.position += new Vector3(1, 0, 0);
-				//pOneMove.transform.position += new Vector3(-1, 0, 0);
+				resetingPositions = true;
+				stepBack = true;
 
 			}
 			if (resetingPositions)
@@ -160,8 +162,17 @@ public class AttackManager : MonoBehaviour {
 				pOneMove.maxX = -3;
 				pTwoMove.minX = 3;
 				BeatManager.Instance.pOneBackedUp = BeatManager.Instance.pTwoBackedUp = false;
-				
 			}
+			if (stepBack)
+			{
+				pOneStepSpace = pOne.transform.position;
+				pOneStepSpace.x = pOne.transform.position.x - 1.0f;
+				
+				pTwoStepSpace = pTwo.transform.position;
+				pTwoStepSpace.x = pTwo.transform.position.x + 1.0f;
+			}
+
+
 		}
 
 		pOneScoreText.text = "" + pOneScore;
