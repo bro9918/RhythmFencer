@@ -72,12 +72,12 @@ public class AttackManager : MonoBehaviour {
 		{
 			pOneAttack.spriteRend.sprite = pOneAttack.lowAttack;
 		}
-		else if (pOneAct && !pOneAttack.attackCommitted && !pOneAttack.parried)
+		else if(pOneAct && !pOneAttack.attackCommitted)
 		{
 			pOneAttack.attackState = 2;
 			pOneAttack.spriteRend.sprite = pOneAttack.midAttack;
 		}
-		else
+		else if(!pOneAct && !pOneAttack.attackCommitted)
 		{
 			pOneAttack.attackState = 0;
 			pOneAttack.spriteRend.sprite = pOneAttack.nullAttack;
@@ -92,65 +92,72 @@ public class AttackManager : MonoBehaviour {
 		{
 			pTwoAttack.spriteRend.sprite = pTwoAttack.lowAttack;
 		}
-		else if (pTwoAct && !pTwoAttack.attackCommitted && !pTwoAttack.parried)
+		else if (pTwoAct && !pTwoAttack.attackCommitted)
 		{
 			pTwoAttack.attackState = 2;
 			pTwoAttack.spriteRend.sprite = pTwoAttack.midAttack;
 		}
-		else
+		else if(!pTwoAct && !pTwoAttack.attackCommitted)
 		{
 			pTwoAttack.attackState = 0;
 			pTwoAttack.spriteRend.sprite = pTwoAttack.nullAttack;
 		}
 
-		pOneAttack.parried = false;
-		pTwoAttack.parried = false;
-
 		if(Mathf.Abs(pOne.transform.position.x - pTwo.transform.position.x) < .7f)
 		{
 			if(pOneAttack.attackState > pTwoAttack.attackState && (pOneAttack.attackState != 3 || pTwoAttack.attackState != 1))
 			{
-				if (pOneAttack.attackState == 3)
-				{
-					pTwoAttack.parried = true;
-					pTwoAttack.spriteRend.sprite = pTwoAttack.parriedAttack;
-				}
-				else
-				{
-					pOneScore++;
-					resetingPositions = true;
-				}
+				pOneScore ++;
 				audio.clip = hit;
 				audio.Play();
 				resetingPositions = true;
+				/*pOne.transform.position = pOneStartSpace;
+				pTwo.transform.position = pTwoStartSpace;
+				pOneMove.xPosition = pOne.transform.position.x;
+				pTwoMove.xPosition = pTwo.transform.position.x;*/
 			}
 			if(pOneAttack.attackState == 3 && pTwoAttack.attackState == 1)
 			{
+<<<<<<< HEAD
 				pOneAttack.parried = true;
 				pOneAttack.spriteRend.sprite = pOneAttack.parriedAttack;
-			}
-
-			if(pTwoAttack.attackState > pOneAttack.attackState && (pTwoAttack.attackState != 3 || pOneAttack.attackState != 1))
-			{
-				if (pTwoAttack.attackState == 3)
-				{
-					pOneAttack.parried = true;
-					pOneAttack.spriteRend.sprite = pOneAttack.parriedAttack;
-				}
-				else
-				{
-					pTwoScore++;
-					resetingPositions = true;
-				}
+=======
 				pTwoScore ++;
 				audio.clip = hit;
 				audio.Play();
 				resetingPositions = true;
+				/*pOne.transform.position = pOneStartSpace;
+				pTwo.transform.position = pTwoStartSpace;
+				pOneMove.xPosition = pOne.transform.position.x;
+				pTwoMove.xPosition = pTwo.transform.position.x;*/
+>>>>>>> 5749c74196c7cf5b155b42e1afe2d6c1b723e5bf
+			}
+			if(pTwoAttack.attackState > pOneAttack.attackState && (pTwoAttack.attackState != 3 || pOneAttack.attackState != 1))
+			{
+				pTwoScore ++;
+				audio.clip = hit;
+				audio.Play();
+				resetingPositions = true;
+				/*pOne.transform.position = pOneStartSpace;
+				pTwo.transform.position = pTwoStartSpace;
+				pOneMove.xPosition = pOne.transform.position.x;
+				pTwoMove.xPosition = pTwo.transform.position.x;*/
 			}
 			if(pTwoAttack.attackState == 3 && pOneAttack.attackState == 1)
 			{
+<<<<<<< HEAD
 				pTwoAttack.parried = true;
 				pTwoAttack.spriteRend.sprite = pTwoAttack.parriedAttack;
+=======
+				pOneScore ++;
+				audio.clip = hit;
+				audio.Play();
+				resetingPositions = true;
+				/*pOne.transform.position = pOneStartSpace;
+				pTwo.transform.position = pTwoStartSpace;
+				pOneMove.xPosition = pOne.transform.position.x;
+				pTwoMove.xPosition = pTwo.transform.position.x;*/
+>>>>>>> 5749c74196c7cf5b155b42e1afe2d6c1b723e5bf
 			}
 			if(pOneAttack.attackState == pTwoAttack.attackState)
 			{
