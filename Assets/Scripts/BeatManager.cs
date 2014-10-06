@@ -120,11 +120,11 @@ public class BeatManager : MonoBehaviour {
 
 			// Notify players that beat happened.
 			bool playersUpdate= true;
-			bool oneSpaceBetween = (playerTwo.transform.position - playerOne.transform.position).magnitude < 2;
+			float between = (playerTwo.transform.position - playerOne.transform.position).magnitude;
+			bool oneSpaceBetween = between < 2 && between > 1;
 			if (oneSpaceBetween && playerOne.moveRight && playerTwo.moveLeft)
 			{
 				playersUpdate = false;
-				// TODO show that players attempted to move into the same space.
 				if (invalidSign != null)
 				{
 					invalidSign.SetActive(true);

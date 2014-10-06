@@ -65,12 +65,12 @@ public class AttackManager : MonoBehaviour {
 		{
 			pOneAttack.spriteRend.sprite = pOneAttack.lowAttack;
 		}
-		else if(pOneAct && !pOneAttack.attackCommitted)
+		else if (pOneAct && !pOneAttack.attackCommitted && !pOneAttack.parried)
 		{
 			pOneAttack.attackState = 2;
 			pOneAttack.spriteRend.sprite = pOneAttack.midAttack;
 		}
-		else if(!pOneAct && !pOneAttack.attackCommitted)
+		else
 		{
 			pOneAttack.attackState = 0;
 			pOneAttack.spriteRend.sprite = pOneAttack.nullAttack;
@@ -85,23 +85,36 @@ public class AttackManager : MonoBehaviour {
 		{
 			pTwoAttack.spriteRend.sprite = pTwoAttack.lowAttack;
 		}
-		else if (pTwoAct && !pTwoAttack.attackCommitted)
+		else if (pTwoAct && !pTwoAttack.attackCommitted && !pTwoAttack.parried)
 		{
 			pTwoAttack.attackState = 2;
 			pTwoAttack.spriteRend.sprite = pTwoAttack.midAttack;
 		}
-		else if(!pTwoAct && !pTwoAttack.attackCommitted)
+		else
 		{
 			pTwoAttack.attackState = 0;
 			pTwoAttack.spriteRend.sprite = pTwoAttack.nullAttack;
 		}
 
+		pOneAttack.parried = false;
+		pTwoAttack.parried = false;
+
 		if(Mathf.Abs(pOne.transform.position.x - pTwo.transform.position.x) < .7f)
 		{
 			if(pOneAttack.attackState > pTwoAttack.attackState && (pOneAttack.attackState != 3 || pTwoAttack.attackState != 1))
 			{
-				pOneScore ++;
-				resetingPositions = true;
+				
+				if (pOneAttack.attackState == 3)
+				{
+					pTwoAttack.parried = true;
+					pTwoAttack.spriteRend.sprite = pTwoAttack.parriedAttack;
+				}
+				else
+				{
+					pOneScore++;
+					resetingPositions = true;
+				}
+				
 			}
 			if(pOneAttack.attackState == 3 && pTwoAttack.attackState == 1)
 			{
@@ -110,8 +123,16 @@ public class AttackManager : MonoBehaviour {
 			}
 			if(pTwoAttack.attackState > pOneAttack.attackState && (pTwoAttack.attackState != 3 || pOneAttack.attackState != 1))
 			{
-				pTwoScore ++;
-				resetingPositions = true;
+				if (pTwoAttack.attackState == 3)
+				{
+					pOneAttack.parried = true;
+					pOneAttack.spriteRend.sprite = pOneAttack.parriedAttack;
+				}
+				else
+				{
+					pTwoScore++;
+					resetingPositions = true;
+				}
 			}
 			if(pTwoAttack.attackState == 3 && pOneAttack.attackState == 1)
 			{

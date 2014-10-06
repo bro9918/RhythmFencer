@@ -10,6 +10,8 @@ public class PlayerTwoAttack : MonoBehaviour {
 	public Sprite midAttack;
 	public Sprite highAttack;
 	public Sprite nullAttack;
+	public Sprite parriedAttack;
+	public bool parried = false;
 	
 	// Use this for initialization
 	void Start () {
