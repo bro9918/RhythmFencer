@@ -35,6 +35,7 @@ public class AttackManager : MonoBehaviour {
 
 	public AudioClip hit;
 	public AudioClip block;
+	public AudioClip parry;
 
 	// Use this for initialization
 	void Start () {
@@ -114,20 +115,26 @@ public class AttackManager : MonoBehaviour {
 				{
 					pTwoAttack.parried = true;
 					pTwoAttack.spriteRend.sprite = pTwoAttack.parriedAttack;
+					audio.clip = parry;
+					audio.Play();
 				}
 				else
 				{
 					pOneScore++;
+					audio.clip = hit;
+					audio.Play();
 					resetingPositions = true;
 				}
-				audio.clip = hit;
-				audio.Play();
+				//audio.clip = hit;
+				//audio.Play();
 				resetingPositions = true;
 			}
 			if(pOneAttack.attackState == 3 && pTwoAttack.attackState == 1)
 			{
 				pOneAttack.parried = true;
 				pOneAttack.spriteRend.sprite = pOneAttack.parriedAttack;
+				audio.clip = parry;
+				audio.Play();
 			}
 
 			if(pTwoAttack.attackState > pOneAttack.attackState && (pTwoAttack.attackState != 3 || pOneAttack.attackState != 1))
@@ -136,10 +143,14 @@ public class AttackManager : MonoBehaviour {
 				{
 					pOneAttack.parried = true;
 					pOneAttack.spriteRend.sprite = pOneAttack.parriedAttack;
+					audio.clip = parry;
+					audio.Play();
 				}
 				else
 				{
 					pTwoScore++;
+					audio.clip = hit;
+					audio.Play();
 					resetingPositions = true;
 				}
 				pTwoScore ++;
@@ -151,6 +162,8 @@ public class AttackManager : MonoBehaviour {
 			{
 				pTwoAttack.parried = true;
 				pTwoAttack.spriteRend.sprite = pTwoAttack.parriedAttack;
+				audio.clip = parry;
+				audio.Play();
 			}
 			if(pOneAttack.attackState == pTwoAttack.attackState)
 			{
