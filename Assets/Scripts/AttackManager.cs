@@ -31,6 +31,7 @@ public class AttackManager : MonoBehaviour {
 	public Vector3 pOneStartSpace;
 	public Vector3 pTwoStartSpace;
 	public bool resetingPositions = false;
+	public bool swordStrike = false;
 
 
 	// Use this for initialization
@@ -51,7 +52,10 @@ public class AttackManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		if(resetingPositions == false)
+		{
+			swordStrike = false;
+		}
 	}
 
 	public void ResolveAttack(bool pOneAct, bool pTwoAct){
@@ -143,12 +147,28 @@ public class AttackManager : MonoBehaviour {
 				pOneMove.xPosition = pOne.transform.position.x;
 				pTwoMove.xPosition = pTwo.transform.position.x;*/
 			}
+			if(pOneAttack.attackState == pTwoAttack.attackState)
+			{
+				audio.clip = block;
+				audio.Play();
+				swordStrike = true;
+				resetingPositions = true;
+				//pTwoMove.transform.position += new Vector3(1, 0, 0);
+				//pOneMove.transform.position += new Vector3(-1, 0, 0);
 
+			}
 			if (resetingPositions)
 			{
 				pOneMove.maxX = -3;
 				pTwoMove.minX = 3;
 				BeatManager.Instance.pOneBackedUp = BeatManager.Instance.pTwoBackedUp = false;
+				if(swordStrike == true)
+				{
+					pOneMove.maxX = -2;
+					pTwoMove.minX = 2;
+					BeatManager.Instance.pOneBackedUp = BeatManager.Instance.pTwoBackedUp = false;
+				}
+
 			}
 		}
 		pOneScoreText.text = "" + pOneScore;
