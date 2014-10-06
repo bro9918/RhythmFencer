@@ -3,6 +3,9 @@ using System.Collections;
 
 public class AttackManager : MonoBehaviour {
 
+	public AudioClip hit;
+	public AudioClip block;
+
 	private static AttackManager instance;
 	public static AttackManager Instance
 	{
@@ -99,6 +102,8 @@ public class AttackManager : MonoBehaviour {
 			if(pOneAttack.attackState > pTwoAttack.attackState && (pOneAttack.attackState != 3 || pTwoAttack.attackState != 1))
 			{
 				pOneScore ++;
+				audio.clip = hit;
+				audio.Play();
 				resetingPositions = true;
 				/*pOne.transform.position = pOneStartSpace;
 				pTwo.transform.position = pTwoStartSpace;
@@ -108,6 +113,8 @@ public class AttackManager : MonoBehaviour {
 			if(pOneAttack.attackState == 3 && pTwoAttack.attackState == 1)
 			{
 				pTwoScore ++;
+				audio.clip = hit;
+				audio.Play();
 				resetingPositions = true;
 				/*pOne.transform.position = pOneStartSpace;
 				pTwo.transform.position = pTwoStartSpace;
@@ -117,6 +124,8 @@ public class AttackManager : MonoBehaviour {
 			if(pTwoAttack.attackState > pOneAttack.attackState && (pTwoAttack.attackState != 3 || pOneAttack.attackState != 1))
 			{
 				pTwoScore ++;
+				audio.clip = hit;
+				audio.Play();
 				resetingPositions = true;
 				/*pOne.transform.position = pOneStartSpace;
 				pTwo.transform.position = pTwoStartSpace;
@@ -126,6 +135,8 @@ public class AttackManager : MonoBehaviour {
 			if(pTwoAttack.attackState == 3 && pOneAttack.attackState == 1)
 			{
 				pOneScore ++;
+				audio.clip = hit;
+				audio.Play();
 				resetingPositions = true;
 				/*pOne.transform.position = pOneStartSpace;
 				pTwo.transform.position = pTwoStartSpace;

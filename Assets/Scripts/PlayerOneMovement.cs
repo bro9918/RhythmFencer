@@ -14,6 +14,8 @@ public class PlayerOneMovement : MonoBehaviour {
 	[HideInInspector]
 	public float maxX;
 
+	public AudioClip slide;
+
 	// Use this for initialization
 	void Start () {
 		xPosition = transform.position.x;
@@ -64,6 +66,8 @@ public class PlayerOneMovement : MonoBehaviour {
 				{
 					transform.Translate(new Vector3(-1.0f, 0.0f, 0.0f));
 					xPosition -= 1.0f;
+					audio.clip = slide;
+					audio.Play();
 				}
 				acted = true;
 			}
@@ -73,6 +77,8 @@ public class PlayerOneMovement : MonoBehaviour {
 				{
 					transform.Translate(new Vector3(1.0f, 0.0f, 0.0f));
 					xPosition += 1.0f;
+					audio.clip = slide;
+					audio.Play();
 				}
 				acted = true;
 			}
