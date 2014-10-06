@@ -122,7 +122,6 @@ public class AttackManager : MonoBehaviour {
 				}
 				audio.clip = hit;
 				audio.Play();
-				resetingPositions = true;
 			}
 			if(pOneAttack.attackState == 3 && pTwoAttack.attackState == 1)
 			{
@@ -142,10 +141,8 @@ public class AttackManager : MonoBehaviour {
 					pTwoScore++;
 					resetingPositions = true;
 				}
-				pTwoScore ++;
 				audio.clip = hit;
 				audio.Play();
-				resetingPositions = true;
 			}
 			if(pTwoAttack.attackState == 3 && pOneAttack.attackState == 1)
 			{
