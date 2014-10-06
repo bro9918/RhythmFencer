@@ -46,6 +46,7 @@ public class BeatManager : MonoBehaviour {
 	public int aggressiveBeatsToPoint;
 	public bool resetAggressiveOnMiss;
 	public bool resetAggressiveOnBack;
+	
 
 	void Awake()
 	{
@@ -138,6 +139,9 @@ public class BeatManager : MonoBehaviour {
 					invalidSign.SetActive(false);
 				}
 			}
+
+			attackManager.pOneScoreText.color = Color.red;
+			attackManager.pTwoScoreText.color = Color.blue;
 
 			if (!attackManager.resetingPositions)
 			{

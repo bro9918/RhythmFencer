@@ -112,6 +112,7 @@ public class AttackManager : MonoBehaviour {
 				else
 				{
 					pOneScore++;
+					pOneScoreText.color = Color.white;
 					resetingPositions = true;
 				}
 				
@@ -119,6 +120,7 @@ public class AttackManager : MonoBehaviour {
 			if(pOneAttack.attackState == 3 && pTwoAttack.attackState == 1)
 			{
 				pTwoScore ++;
+				pTwoScoreText.color = Color.white;
 				resetingPositions = true;
 			}
 			if(pTwoAttack.attackState > pOneAttack.attackState && (pTwoAttack.attackState != 3 || pOneAttack.attackState != 1))
@@ -131,12 +133,14 @@ public class AttackManager : MonoBehaviour {
 				else
 				{
 					pTwoScore++;
+					pTwoScoreText.color = Color.white;
 					resetingPositions = true;
 				}
 			}
 			if(pTwoAttack.attackState == 3 && pOneAttack.attackState == 1)
 			{
 				pOneScore ++;
+				pOneScoreText.color = Color.white;
 				resetingPositions = true;
 			}
 
@@ -160,12 +164,14 @@ public class AttackManager : MonoBehaviour {
 		{
 			pOneAggressiveBeats = 0;
 			pOneScore++;
+			pOneScoreText.color = Color.white;
 		}
 
 		if (pTwoAggressiveBeats >= BeatManager.Instance.aggressiveBeatsToPoint && BeatManager.Instance.aggressiveBeatsToPoint > 0)
 		{
 			pTwoAggressiveBeats = 0;
 			pTwoScore++;
+			pTwoScoreText.color = Color.white;
 		}
 	}
 }
