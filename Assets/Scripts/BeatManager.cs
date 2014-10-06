@@ -43,6 +43,9 @@ public class BeatManager : MonoBehaviour {
 	[HideInInspector]
 	public bool pTwoBackedUp = false;
 	public GameObject beatMoverContatiner;
+	public int aggressiveBeatsToPoint;
+	public bool resetAggressiveOnMiss;
+	public bool resetAggressiveOnBack;
 
 	void Awake()
 	{
@@ -109,6 +112,9 @@ public class BeatManager : MonoBehaviour {
 		// Track when the oldest beat movers have given enough time after beat.
 		if (leftMoverDestroy != null && (leftMoverDestroy.transform.position - beatCenter).magnitude >= beatMoverOffset * beatTolerance)
 		{
+			// Track if the players have acted on this beat.
+			bool pOneAct = false, pTwoAct = false;
+
 			// Destroy the oldest beat movers.
 			DestroyBeatMovers();
 
@@ -135,36 +141,37 @@ public class BeatManager : MonoBehaviour {
 
 			if (!attackManager.resetingPositions)
 			{
-				bool pOneAct = playerOne.OnBeat(playersUpdate);
-				bool pTwoAct = playerTwo.OnBeat(playersUpdate);
+				pOneAct = playerOne.OnBeat(playersUpdate);
+				pTwoAct = playerTwo.OnBeat(playersUpdate);
 				attackManager.ResolveAttack(pOneAct, pTwoAct);
 			}
 			else
 			{
-				bool pOneAct = false, pTwoAct = false;
 				if (true)//autoBackup)
 				{
 					if (!pOneBackedUp && playerOne.transform.position.x > attackManager.pOneStartSpace.x)
 					{
 						playerOne.transform.position += new Vector3(-1, 0, 0);
 						playerOne.xPosition = playerOne.transform.position.x;
+						pOneAct = true;
 					}
 					else
 					{
 						pOneBackedUp = true;
 						pOneAct = playerOne.OnBeat(true);
-						Debug.Log(pOneAct);
+						//Debug.Log(pOneAct);
 					}
 					if (!pTwoBackedUp && playerTwo.transform.position.x < attackManager.pTwoStartSpace.x)
 					{
 						playerTwo.transform.position += new Vector3(1, 0, 0);
 						playerTwo.xPosition = playerTwo.transform.position.x;
+						pTwoAct = true;
 					}
 					else
 					{
 						pTwoBackedUp = true;
 						pTwoAct = playerTwo.OnBeat(true);
-						Debug.Log(pTwoAct);
+						//Debug.Log(pTwoAct);
 					}
 				}
 
@@ -175,6 +182,10 @@ public class BeatManager : MonoBehaviour {
 					playerTwo.minX = -1;
 				}
 			}
+
+			// Track beats of players standing on opponent's side.
+			UpdateAggressiveBeats(pOneAct, pTwoAct);
+			attackManager.ApplyAggressiveBeats();
 		}
 	}
 
@@ -223,5 +234,44 @@ public class BeatManager : MonoBehaviour {
 			return ready;
 		}
 		return false;
+	}
+
+	public void UpdateAggressiveBeats(bool pOneActed, bool pTwoActed)
+	{
+		// Reset aggressive beat counts when missing a beat, if desired.
+		if (resetAggressiveOnMiss)
+		{
+			if (!pOneActed)
+			{
+				attackManager.pOneAggressiveBeats = 0;
+			}
+			if (!pTwoActed)
+			{
+				attackManager.pTwoAggressiveBeats = 0;
+			}
+		}
+
+		// Reset aggressive beat counts when players on are on their own sides, if desired.
+		if (resetAggressiveOnBack)
+		{
+			if (playerOne.transform.position.x < 0)
+			{
+				attackManager.pOneAggressiveBeats = 0;
+			}
+			if (playerTwo.transform.position.x > 0)
+			{
+				attackManager.pTwoAggressiveBeats = 0;
+			}
+		}
+
+		// Check if either character is on the other's side of the mid-line.
+		if (playerOne.transform.position.x > 0)
+		{
+			attackManager.pOneAggressiveBeats++;
+		}
+		if (playerTwo.transform.position.x < 0)
+		{
+			attackManager.pTwoAggressiveBeats++;
+		}
 	}
 }

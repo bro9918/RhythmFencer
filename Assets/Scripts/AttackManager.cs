@@ -20,7 +20,9 @@ public class AttackManager : MonoBehaviour {
 	private PlayerOneAttack pOneAttack;
 	private PlayerTwoAttack pTwoAttack;
 	public int pOneScore = 0;
+	public int pOneAggressiveBeats = 0;
 	public int pTwoScore = 0;
+	public int pTwoAggressiveBeats = 0;
 	public GUIText pOneScoreText;
 	public GUIText pTwoScoreText;
 	private PlayerOneMovement pOneMove;
@@ -42,13 +44,13 @@ public class AttackManager : MonoBehaviour {
 		pOneScoreText.text = "" + pOneScore;
 		pTwoScoreText.text = "" + pTwoScore;
 
-		pOneStartSpace = new Vector3(-3.3f, -0.33f, 0);
-		pTwoStartSpace = new Vector3(3.3f, -0.33f, 0);
+		pOneStartSpace = new Vector3(-3f, -0.33f, 0);
+		pTwoStartSpace = new Vector3(3f, -0.33f, 0);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+
 	}
 
 	public void ResolveAttack(bool pOneAct, bool pTwoAct){
@@ -100,37 +102,21 @@ public class AttackManager : MonoBehaviour {
 			{
 				pOneScore ++;
 				resetingPositions = true;
-				/*pOne.transform.position = pOneStartSpace;
-				pTwo.transform.position = pTwoStartSpace;
-				pOneMove.xPosition = pOne.transform.position.x;
-				pTwoMove.xPosition = pTwo.transform.position.x;*/
 			}
 			if(pOneAttack.attackState == 3 && pTwoAttack.attackState == 1)
 			{
 				pTwoScore ++;
 				resetingPositions = true;
-				/*pOne.transform.position = pOneStartSpace;
-				pTwo.transform.position = pTwoStartSpace;
-				pOneMove.xPosition = pOne.transform.position.x;
-				pTwoMove.xPosition = pTwo.transform.position.x;*/
 			}
 			if(pTwoAttack.attackState > pOneAttack.attackState && (pTwoAttack.attackState != 3 || pOneAttack.attackState != 1))
 			{
 				pTwoScore ++;
 				resetingPositions = true;
-				/*pOne.transform.position = pOneStartSpace;
-				pTwo.transform.position = pTwoStartSpace;
-				pOneMove.xPosition = pOne.transform.position.x;
-				pTwoMove.xPosition = pTwo.transform.position.x;*/
 			}
 			if(pTwoAttack.attackState == 3 && pOneAttack.attackState == 1)
 			{
 				pOneScore ++;
 				resetingPositions = true;
-				/*pOne.transform.position = pOneStartSpace;
-				pTwo.transform.position = pTwoStartSpace;
-				pOneMove.xPosition = pOne.transform.position.x;
-				pTwoMove.xPosition = pTwo.transform.position.x;*/
 			}
 
 			if (resetingPositions)
@@ -145,5 +131,20 @@ public class AttackManager : MonoBehaviour {
 
 		pOneAttack.attackCommitted = false;
 		pTwoAttack.attackCommitted = false;
+	}
+
+	public void ApplyAggressiveBeats()
+	{
+		if (pOneAggressiveBeats >= BeatManager.Instance.aggressiveBeatsToPoint && BeatManager.Instance.aggressiveBeatsToPoint > 0)
+		{
+			pOneAggressiveBeats = 0;
+			pOneScore++;
+		}
+
+		if (pTwoAggressiveBeats >= BeatManager.Instance.aggressiveBeatsToPoint && BeatManager.Instance.aggressiveBeatsToPoint > 0)
+		{
+			pTwoAggressiveBeats = 0;
+			pTwoScore++;
+		}
 	}
 }
