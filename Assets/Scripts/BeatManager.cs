@@ -174,6 +174,8 @@ public class BeatManager : MonoBehaviour {
 					playerOne.maxX = 1;
 					playerTwo.minX = -1;
 				}
+
+
 			}
 		}
 	}

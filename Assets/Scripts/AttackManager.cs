@@ -2,10 +2,7 @@
 using System.Collections;
 
 public class AttackManager : MonoBehaviour {
-
-	public AudioClip hit;
-	public AudioClip block;
-
+	
 	private static AttackManager instance;
 	public static AttackManager Instance
 	{
@@ -33,6 +30,8 @@ public class AttackManager : MonoBehaviour {
 	public bool resetingPositions = false;
 	public bool swordStrike = false;
 
+	public AudioClip hit;
+	public AudioClip block;
 
 	// Use this for initialization
 	void Start () {
@@ -152,7 +151,6 @@ public class AttackManager : MonoBehaviour {
 				audio.clip = block;
 				audio.Play();
 				swordStrike = true;
-				resetingPositions = true;
 				//pTwoMove.transform.position += new Vector3(1, 0, 0);
 				//pOneMove.transform.position += new Vector3(-1, 0, 0);
 
@@ -162,15 +160,10 @@ public class AttackManager : MonoBehaviour {
 				pOneMove.maxX = -3;
 				pTwoMove.minX = 3;
 				BeatManager.Instance.pOneBackedUp = BeatManager.Instance.pTwoBackedUp = false;
-				if(swordStrike == true)
-				{
-					pOneMove.maxX = -2;
-					pTwoMove.minX = 2;
-					BeatManager.Instance.pOneBackedUp = BeatManager.Instance.pTwoBackedUp = false;
-				}
-
+				
 			}
 		}
+
 		pOneScoreText.text = "" + pOneScore;
 		pTwoScoreText.text = "" + pTwoScore;
 
@@ -178,3 +171,4 @@ public class AttackManager : MonoBehaviour {
 		pTwoAttack.attackCommitted = false;
 	}
 }
+
