@@ -119,9 +119,8 @@ public class AttackManager : MonoBehaviour {
 			}
 			if(pOneAttack.attackState == 3 && pTwoAttack.attackState == 1)
 			{
-				pTwoScore ++;
-				pTwoScoreText.color = Color.white;
-				resetingPositions = true;
+				pOneAttack.parried = true;
+				pOneAttack.spriteRend.sprite = pOneAttack.parriedAttack;
 			}
 			if(pTwoAttack.attackState > pOneAttack.attackState && (pTwoAttack.attackState != 3 || pOneAttack.attackState != 1))
 			{
@@ -139,9 +138,8 @@ public class AttackManager : MonoBehaviour {
 			}
 			if(pTwoAttack.attackState == 3 && pOneAttack.attackState == 1)
 			{
-				pOneScore ++;
-				pOneScoreText.color = Color.white;
-				resetingPositions = true;
+				pTwoAttack.parried = true;
+				pTwoAttack.spriteRend.sprite = pTwoAttack.parriedAttack;
 			}
 
 			if (resetingPositions)
